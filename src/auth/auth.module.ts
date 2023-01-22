@@ -9,11 +9,13 @@ import { UserModule } from 'src/users/user.module';
 import { PassportModule } from '@nestjs/passport/dist';
 import { LocalStrategy } from './strategy/local-strategy';
 import { JwtStrategy } from './strategy/jwt-strategy';
+import { CartModule } from 'src/cart/cart.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: AuthEntity.name, schema: AuthSchema }]),
     UserModule,
+    CartModule,
     PassportModule,
     JwtModule.registerAsync({
       useFactory: () => {

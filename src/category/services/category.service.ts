@@ -30,12 +30,10 @@ export class CategoryService {
 
       const saveCategory = await categoryDB.save();
 
-      fs.unlinkSync(category.categoryImage?.path);
-
       return saveCategory.toJSON();
     } catch (error) {
       await this.cloudinaryService.deleteUploadImage(img.public_id);
-      fs.unlinkSync(category.categoryImage?.path);
+
       throw new HttpException(
         'Ha ocurrido un error, intentalo mas tarde',
         HttpStatus.INTERNAL_SERVER_ERROR,

@@ -10,7 +10,7 @@ export class CartEntity extends Document {
   _id: string;
 
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Owner' }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProductEntity' }],
     default: [],
   })
   products: ProductEntity[];

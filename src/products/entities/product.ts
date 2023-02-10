@@ -13,22 +13,31 @@ export class ProductEntity extends Document {
   })
   name: string;
 
-  @Prop({ type: Date, required: true, default: Date.now() })
+  @Prop({ type: Date, default: Date.now() })
   createdAt: Date;
 
-  @Prop({ type: Number, default: null })
-  stock: number;
+  @Prop({ type: Boolean, default: false })
+  haveStock?: number;
+
+  @Prop({ type: Number, default: 0 })
+  stock?: number;
 
   @Prop({ type: Number, required: true })
   price: number;
 
-  @Prop({ type: Number, default: null })
+  @Prop({ type: Number, required: true })
   truePrice: number;
 
   @Prop([
-    { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    { type: mongoose.Schema.Types.ObjectId, ref: 'categories', required: true },
   ])
   categories: CategoryEntity[];
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  productImage: string;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(ProductEntity);

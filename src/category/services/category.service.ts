@@ -4,7 +4,6 @@ import mongoose, { Model } from 'mongoose';
 import { CloudinaryService } from 'src/cloudinary/service/cloudinary';
 import { CategoryDto } from '../dto/category';
 import { CategoryEntity } from '../entities/category';
-import * as fs from 'fs';
 import { CategoryUpdateDto } from '../dto/category.update';
 import { UploadApiResponse } from 'cloudinary';
 

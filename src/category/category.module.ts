@@ -5,7 +5,7 @@ import { CategoryController } from './controller/category';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CategoryService } from './services/category.service';
-import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { CloudinaryService } from 'src/cloudinary/service/cloudinary';
 
 @Module({
   imports: [
@@ -27,9 +27,8 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
         }),
       }),
     }),
-    CloudinaryModule,
   ],
   controllers: [CategoryController],
-  providers: [CategoryService],
+  providers: [CategoryService, CloudinaryService],
 })
 export class CategoryModule {}

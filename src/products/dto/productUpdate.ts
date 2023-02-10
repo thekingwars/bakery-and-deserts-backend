@@ -7,7 +7,10 @@ import {
   IsString,
 } from 'class-validator';
 
-export class ProductDto {
+export class ProductUpdateDto {
+  @IsString()
+  _id: string;
+
   @IsString({ message: 'El nombre debe ser un string' })
   @IsNotEmpty({ message: 'El nombre no puede estar vacio o ser nulo' })
   name: string;
@@ -41,6 +44,7 @@ export class ProductDto {
     truePrice: number,
     categories: any[],
     productImage: Express.Multer.File,
+    _id: string,
     haveStock?: boolean,
   ) {
     this.name = name;
@@ -51,5 +55,6 @@ export class ProductDto {
     this.categories = categories;
     this.haveStock = haveStock;
     this.productImage = productImage;
+    this._id = _id;
   }
 }

@@ -1,14 +1,18 @@
+import { ProductDto } from './../../products/dto/products';
+import { ProductUpdateDto } from './../../products/dto/productUpdate';
+import { ProductService } from './../../products/services/product.service';
+import { Product } from './../../products/models/product';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Product } from 'src/products/models/product';
 import { CartDto } from '../dto/cart';
 import { CartEntity } from '../entities/cart';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class CartService {
   constructor(
     @InjectModel(CartEntity.name) private cartEntity: Model<CartEntity>,
+    private readonly productService: ProductService,
   ) {}
 
   async createCartByRegisterUser(payload: CartDto): Promise<CartDto> {
@@ -19,17 +23,28 @@ export class CartService {
     return CartDto.cartJSON(saveCart.toJSON);
   }
 
-  async updateCart(cartDto: CartDto) {
+  async updateCart(cartDto: CartDto, productDto: ProductUpdateDto) {
     try {
       const findCart = await this.cartEntity.findOne({ _id: cartDto._id });
 
-      const products = [...findCart.products, ...cartDto.products];
-
-      const cart = await this.cartEntity.findOneAndUpdate(
-        { _id: cartDto._id },
-        { products },
+      const val = await this.productService.findProductStock(
+        productDto._id,
+        productDto.stock,
       );
-      return cart;
+      if (val > 0 || val != 0) {
+        const products = [...findCart.products, ...cartDto.products];
+        const cart = await this.cartEntity.findOneAndUpdate(
+          { _id: cartDto._id },
+          { products },
+        );
+
+        return cart;
+      } else {
+        throw new HttpException(
+          'No hay existencias, contacte a la administración.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     } catch (err) {
       throw new HttpException(
         'Ha ocurrido un error, intentalo mas tarde',
@@ -57,17 +72,11 @@ export class CartService {
     const cart = await this.cartEntity
       .find({ _id: id, products: product })
       .populate('products.product');
-
-    /*if (!cart) {
-      throw new HttpException(
-        'No ha añadido ningun producto',
-        HttpStatus.NO_CONTENT,
-      );
-    }*/
     return cart;
   }
+}
 
-  /*async findOneProduct(id: string){
+/*async findOneProduct(id: string){
     return this.cartEntity.findOne({_id})
   }
 
@@ -105,4 +114,3 @@ export class CartService {
       );
     }
   }*/
-}

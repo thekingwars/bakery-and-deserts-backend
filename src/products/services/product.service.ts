@@ -91,4 +91,24 @@ export class ProductService {
       _id: new mongoose.Types.ObjectId(id),
     });
   }
+
+  async findProductStock(id: string, stock: number) {
+    const existencia = await this.productModel.findOne({
+      _id: id,
+      stock: stock,
+    });
+    return existencia.stock;
+  }
+
+  /*async valStock(productDto: ProductDto) {
+    const hay = await this.productModel.findOne({ stock: productDto.stock });
+
+    if (productDto.stock <= 0) {
+      throw new HttpException(
+        'No hay productos agregados',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return hay;
+  }*/
 }

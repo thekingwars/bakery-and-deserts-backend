@@ -23,28 +23,16 @@ export class CartService {
     return CartDto.cartJSON(saveCart.toJSON);
   }
 
-  async updateCart(cartDto: CartDto, productDto: ProductUpdateDto) {
+  async updateCart(cartDto: CartDto) {
     try {
       const findCart = await this.cartEntity.findOne({ _id: cartDto._id });
 
-      const val = await this.productService.findProductStock(
-        productDto._id,
-        productDto.stock,
+      const products = [...findCart.products, ...cartDto.products];
+      const cart = await this.cartEntity.findOneAndUpdate(
+        { _id: cartDto._id },
+        { products },
       );
-      if (val > 0 || val != 0) {
-        const products = [...findCart.products, ...cartDto.products];
-        const cart = await this.cartEntity.findOneAndUpdate(
-          { _id: cartDto._id },
-          { products },
-        );
-
-        return cart;
-      } else {
-        throw new HttpException(
-          'No hay existencias, contacte a la administración.',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+      return cart;
     } catch (err) {
       throw new HttpException(
         'Ha ocurrido un error, intentalo mas tarde',

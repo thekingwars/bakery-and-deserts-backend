@@ -1,9 +1,9 @@
+import { ProductDto } from './../dto/products';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UploadApiResponse } from 'cloudinary';
 import mongoose, { Model } from 'mongoose';
 import { CloudinaryService } from 'src/cloudinary/service/cloudinary';
-import { ProductDto } from '../dto/products';
 import { ProductUpdateDto } from '../dto/productUpdate';
 import { ProductEntity } from '../entities/product';
 
@@ -93,22 +93,17 @@ export class ProductService {
   }
 
   async findProductStock(id: string, stock: number) {
-    const existencia = await this.productModel.findOne({
-      _id: id,
-      stock: stock,
-    });
-    return existencia.stock;
+    const exist = this.productModel.find(
+      { id: this.findOneProduct(id) },
+      {
+        stock: stock,
+      },
+    );
+
+    return exist;
   }
 
-  /*async valStock(productDto: ProductDto) {
-    const hay = await this.productModel.findOne({ stock: productDto.stock });
-
-    if (productDto.stock <= 0) {
-      throw new HttpException(
-        'No hay productos agregados',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-    return hay;
+  /*async valStock() {
+    return await this.findProductStock(productDto._id, productDto.stock);
   }*/
 }

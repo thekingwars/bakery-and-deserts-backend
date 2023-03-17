@@ -1,5 +1,3 @@
-import { ProductDto } from './../../products/dto/products';
-import { ProductUpdateDto } from './../../products/dto/productUpdate';
 import { ProductService } from './../../products/services/product.service';
 import { Product } from './../../products/models/product';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';

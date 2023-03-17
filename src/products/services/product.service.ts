@@ -99,11 +99,11 @@ export class ProductService {
         stock: stock,
       },
     );
-
     return exist;
   }
 
-  /*async valStock() {
-    return await this.findProductStock(productDto._id, productDto.stock);
-  }*/
+  async valStock(productDto: ProductUpdateDto) {
+    const { stock } = productDto;
+    return await this.findProductStock(productDto._id, stock);
+  }
 }

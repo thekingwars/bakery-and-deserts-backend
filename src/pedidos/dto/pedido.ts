@@ -1,23 +1,26 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { Cart } from 'src/cart/models/cart';
+import { User } from 'src/users/model/user';
 
 export class PedidoDto {
-  @IsString({ message: 'El userID debe ser un string' })
-  @IsNotEmpty({ message: 'El userID no puede estar vacio o ser nulo' })
-  _id: string;
+  user: User;
 
-  @IsArray({ message: 'los productos debe ser un array' })
-  cart: Array<Cart>;
+  @IsNotEmpty({ message: 'El valor no puede ser nulo' })
+  cart: Cart;
 
   createdAt: Date;
 
+  @IsNotEmpty({ message: 'El valor no puede ser nulo' })
+  @IsNumber()
+  status: number;
+
   static cartJSON(obj: Record<string, any>) {
-    return new PedidoDto(obj['userID'], obj['cart'], obj['createdAt']);
+    return new PedidoDto(obj['cart'], obj['createdAt'], obj['user']);
   }
 
-  constructor(_id: string, cart: Array<Cart>, createdAt: Date) {
-    this._id = _id;
+  constructor(cart: Cart, createdAt: Date, user: User) {
     this.cart = cart;
     this.createdAt = createdAt;
+    this.user = user;
   }
 }

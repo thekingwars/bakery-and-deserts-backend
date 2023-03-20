@@ -1,18 +1,19 @@
-import { CartEntity } from './../../cart/entities/cart';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import { Document } from 'mongoose';
+import { CartDto } from 'src/cart/dto/cart';
+import { UserDto } from 'src/users/dto/user';
 @Schema({
   collection: 'pedido',
 })
 export class PedidoEntity extends Document {
-  @Prop({ type: String, required: true })
-  _id: string;
+  @Prop({ type: Object })
+  cart: CartDto;
 
-  @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CartEntity' }],
-    default: [],
-  })
-  cart: CartEntity[];
+  @Prop({ type: Object })
+  user: UserDto;
+
+  @Prop({ type: Number, required: true })
+  status: number;
 
   @Prop({ type: Date, required: true, default: Date.now() })
   createdAt: Date;

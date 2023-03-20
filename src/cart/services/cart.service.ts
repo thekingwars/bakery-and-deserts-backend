@@ -10,7 +10,6 @@ import { Model } from 'mongoose';
 export class CartService {
   constructor(
     @InjectModel(CartEntity.name) private cartEntity: Model<CartEntity>,
-    private productService: ProductService,
   ) {}
 
   async createCartByRegisterUser(payload: CartDto): Promise<CartDto> {

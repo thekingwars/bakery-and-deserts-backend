@@ -66,8 +66,6 @@ export class ProductService {
       );
     }
 
-    console.log(img);
-
     try {
       await this.productModel.updateOne(
         { _id: productDto._id },
@@ -90,20 +88,5 @@ export class ProductService {
     return this.productModel.deleteOne({
       _id: new mongoose.Types.ObjectId(id),
     });
-  }
-
-  async findProductStock(id: string, stock: number) {
-    const exist = this.productModel.find(
-      { id: this.findOneProduct(id) },
-      {
-        stock: stock,
-      },
-    );
-    return exist;
-  }
-
-  async valStock(productDto: ProductUpdateDto) {
-    const { stock } = productDto;
-    return await this.findProductStock(productDto._id, stock);
   }
 }

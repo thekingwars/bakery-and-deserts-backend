@@ -3,6 +3,9 @@ import { Cart } from 'src/cart/models/cart';
 import { User } from 'src/users/model/user';
 
 export class PedidoDto {
+  @IsNotEmpty({ message: 'El valor no puede ser nulo' })
+  _id: string;
+
   user: User;
 
   @IsNotEmpty({ message: 'El valor no puede ser nulo' })

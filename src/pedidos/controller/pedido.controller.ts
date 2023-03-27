@@ -7,11 +7,11 @@ import { PedidoService } from '../services/pedidos.service';
 export class PedidoController {
   constructor(private pedidoService: PedidoService) {}
 
-  // @Get()
-  // @UseGuards(JwtGuard)
-  // findPedido(@Body() { _id, cart }: PedidoDto) {
-  //   return this.pedidoService.findPedido(_id, cart);
-  // }
+  @Get()
+  @UseGuards(JwtGuard)
+  findPedido(@Body() { cart }: PedidoDto) {
+    return this.pedidoService.findPedido(cart);
+  }
 
   @Post('create')
   // @UseGuards(JwtGuard)
@@ -19,11 +19,10 @@ export class PedidoController {
     return this.pedidoService.createPedido({ ...payload });
   }
 
-  // @UseGuards(JwtGuard)
-  // @Put('update')
-  // async updatePedido(@Body() payload: PedidoDto) {
-  //   return this.pedidoService.updatePedido({
-  //     ...payload,
-  //   });
-  // }
+  @Put('update')
+  async updatePedido(@Body() payload: PedidoDto) {
+    return this.pedidoService.updatePedidoStatus({
+      ...payload,
+    });
+  }
 }

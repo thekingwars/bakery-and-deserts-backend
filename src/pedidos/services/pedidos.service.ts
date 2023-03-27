@@ -1,12 +1,13 @@
 import { PedidoDto } from './../dto/pedido';
 import { PedidoEntity } from './../entities/pedido';
 import { InjectModel } from '@nestjs/mongoose';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Cart } from 'src/cart/models/cart';
 import { UserService } from 'src/users/services/user.service';
 import { MailingService } from 'src/mailing/service/mailing.service';
 import { use } from 'passport';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class PedidoService {
@@ -42,29 +43,28 @@ export class PedidoService {
     return PedidoDto.cartJSON(savePedido.toJSON());
   }
 
-  // async updatePedido(pedidoDto: PedidoDto) {
-  //   try {
-  //     const findPedido = await this.pedidoEntity.findOne({
-  //       _id: pedidoDto._id,
-  //     });
+  async updatePedidoStatus(pedidoDto: PedidoDto) {
+    try {
+      if (pedidoDto.status < 3) {
+        const pedido = await this.pedidoEntity.findOneAndUpdate(
+          { _id: pedidoDto._id },
+          { ...pedidoDto, status: pedidoDto.status + 1 },
+        );
+        console.log(pedido);
+        return pedido;
+      }
+      throw new HttpException('El status maximo es 3', HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      throw new HttpException(
+        'Ha ocurrido un error, intentalo mas tarde',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
-  //     const cart = [...findPedido.cart, ...pedidoDto.cart];
-  //     const pedido = await this.pedidoEntity.findOneAndUpdate(
-  //       { _id: pedidoDto._id },
-  //       { cart },
-  //     );
-  //     return pedido;
-  //   } catch (err) {
-  //     throw new HttpException(
-  //       'Ha ocurrido un error, intentalo mas tarde',
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //     );
-  //   }
-  // }
-
-  async findPedido(id: string, cart: Cart[]) {
+  async findPedido(cart: Cart) {
     const pedido = await this.pedidoEntity
-      .find({ _id: id, cart: cart })
+      .find({ scart: cart })
       .populate('cart.cart');
     return pedido;
   }

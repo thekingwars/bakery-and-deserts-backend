@@ -25,4 +25,11 @@ export class PedidoController {
       ...payload,
     });
   }
+
+  @Put('update')
+  async rejectPedido(@Body() payload: PedidoDto) {
+    return this.pedidoService.rejectPedidoStatus({
+      ...payload,
+    });
+  }
 }

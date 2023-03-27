@@ -6,8 +6,6 @@ import { Model } from 'mongoose';
 import { Cart } from 'src/cart/models/cart';
 import { UserService } from 'src/users/services/user.service';
 import { MailingService } from 'src/mailing/service/mailing.service';
-import { use } from 'passport';
-import { throwError } from 'rxjs';
 
 @Injectable()
 export class PedidoService {
@@ -50,10 +48,23 @@ export class PedidoService {
           { _id: pedidoDto._id },
           { ...pedidoDto, status: pedidoDto.status + 1 },
         );
-        console.log(pedido);
         return pedido;
       }
       throw new HttpException('El status maximo es 3', HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      throw new HttpException(
+        'Ha ocurrido un error, intentalo mas tarde',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async rejectPedidoStatus(pedidoDto: PedidoDto) {
+    try {
+      await this.pedidoEntity.findByIdAndUpdate(pedidoDto._id, {
+        ...pedidoDto,
+        status: 4,
+      });
     } catch (err) {
       throw new HttpException(
         'Ha ocurrido un error, intentalo mas tarde',

@@ -43,15 +43,34 @@ export class PedidoService {
 
   async updatePedidoStatus(pedidoDto: PedidoDto) {
     try {
+      console.log(pedidoDto);
       if (pedidoDto.status < 3) {
+        const statusPedido: number = pedidoDto.status + 1;
         const pedido = await this.pedidoEntity.findOneAndUpdate(
           { _id: pedidoDto._id },
-          { ...pedidoDto, status: pedidoDto.status + 1 },
+          { ...pedidoDto, status: statusPedido },
         );
+
+        switch (statusPedido) {
+          case 2:
+            this.mailingService.sendEmailStatusTwo(
+              pedidoDto.user.email,
+              'Pago Confirmado',
+              pedidoDto.user.fullName,
+            );
+          case 3:
+            this.mailingService.sendEmailStatusTwo(
+              pedidoDto.user.email,
+              'Pedido recibido',
+              pedidoDto.user.fullName,
+            );
+        }
+
         return pedido;
       }
       throw new HttpException('El status maximo es 3', HttpStatus.BAD_REQUEST);
     } catch (err) {
+      console.log(err);
       throw new HttpException(
         'Ha ocurrido un error, intentalo mas tarde',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -65,6 +84,12 @@ export class PedidoService {
         ...pedidoDto,
         status: 4,
       });
+
+      this.mailingService.sendEmailStatusRejected(
+        pedidoDto.user.email,
+        'Pedido Rechazado',
+        pedidoDto.user.email,
+      );
     } catch (err) {
       throw new HttpException(
         'Ha ocurrido un error, intentalo mas tarde',

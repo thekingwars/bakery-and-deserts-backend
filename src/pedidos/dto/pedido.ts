@@ -6,11 +6,13 @@ export class PedidoDto {
   @IsNotEmpty({ message: 'El valor no puede ser nulo' })
   _id: string;
 
+  @IsNotEmpty({ message: 'El usuario no puede ser nulo' })
   user: User;
 
   @IsNotEmpty({ message: 'El valor no puede ser nulo' })
   cart: Cart;
 
+  @IsNotEmpty({ message: 'El createdAt no puede ser nulo' })
   createdAt: Date;
 
   @IsNotEmpty({ message: 'El valor no puede ser nulo' })

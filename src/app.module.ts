@@ -28,8 +28,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
         port: 465,
         secure: true, // true for 465, false for other ports
         auth: {
-          user: 'carlosguerra2001.2@gmail.com', // generated ethereal user
-          pass: 'dliymrijlegxxvgy', // generated ethereal password
+          user: 'bakeryanddessertsmcbo@gmail.com', // generated ethereal user
+          pass: 'zxddehlclvpdgyde', // generated ethereal password
         },
       },
       template: {
